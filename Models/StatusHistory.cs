@@ -1,13 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using OrderManager.Models.Enums;
 
 namespace OrderManager.Models
 {
-    class StatusHistory
+    /// <summary>
+    /// Статус заявки
+    /// </summary>
+    public class StatusHistory
     {
-        //TODO: добавить поля
+        /// <summary>
+        /// Уникальный идентификатор
+        /// </summary>
+        public int Id { get; set; }
+        
+        /// <summary>
+        /// Статус 
+        /// </summary>
+        public OrderStatusEnum Status { get; set; }
+
+        /// <summary>
+        /// Дата и время проставления статуса
+        /// </summary>
+        public DateTime DataTime { get; set; }
     }
 }

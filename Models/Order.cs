@@ -1,13 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace OrderManager.Models
 {
-    class Order
+    /// <summary>
+    /// Заяка на доставку груза
+    /// </summary>
+    public class Order
     {
-        //TODO: добавить поля
+        /// <summary>
+        /// Уникальный идентификатор
+        /// </summary>
+        public int Id { get; set; }
+
+        /// <summary>
+        /// Клиент
+        /// </summary>
+        public Client Client { get; set; }
+
+        /// <summary>
+        /// Точка вывоза
+        /// </summary>
+        public string PickupPoint { get; set; }
+
+        /// <summary>
+        /// Точка доставки
+        /// </summary>
+        public string FinishPoint { get; set; }
+
+        /// <summary>
+        /// День отгрузки
+        /// </summary>
+        public DateTime PickupDay { get; set; }
+
+        /// <summary>
+        /// История статусов
+        /// </summary>
+        public List<StatusHistory> StatusHitory { get; set; }
+
+        /// <summary>
+        /// Удалена ли запись из основного списка
+        /// </summary>
+        public DateTime? DeleteDateTime { get; set; }
     }
 }
