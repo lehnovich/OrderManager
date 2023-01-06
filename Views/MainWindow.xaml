@@ -5,8 +5,58 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrderManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="900">
+        Title="MainWindow" Height="450" Width="800">
     <Grid>
-
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="100"/>
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0">
+            <TabItem Name="OrdersTab">
+                <TabItem.Header>
+                    <TextBlock Text="Заявки"/>
+                </TabItem.Header>
+                <ListView>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Номер заявки"/>
+                            <GridViewColumn Header="Дата"/>
+                            <GridViewColumn Header="Клиент"/>
+                            <GridViewColumn Header="Актуальный статус"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Name="ClientsTab">
+                <TabItem.Header>
+                    <TextBlock Text="Клиенты"/>
+                </TabItem.Header>
+                <ListView>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Наименование организации"/>
+                            <GridViewColumn Header="ИНН"/>
+                            <GridViewColumn Header="КПП"/>
+                            <GridViewColumn Header="Состояние"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Name="DeletedOrdersTab">
+                <TabItem.Header>
+                    <TextBlock Text="Удалённые заявки"/>
+                </TabItem.Header>
+                <ListView>
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="Номер заявки"/>
+                            <GridViewColumn Header="Дата"/>
+                            <GridViewColumn Header="Клиент"/>
+                            <GridViewColumn Header="Причина удаления"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+        </TabControl>
     </Grid>
 </Window>
