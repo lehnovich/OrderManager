@@ -45,9 +45,6 @@ namespace OrderManager.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("PickupDay")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("PickupPoint")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");

@@ -46,7 +46,7 @@ namespace OrderManager.Models
         /// <param name="pickupDay">Дата пикапа</param>
         /// <param name="contactPhone">Контактный телефон</param>
         /// <returns></returns>
-        public static DataWorkerResponse AddOrder(string clientName, string pickPoint, string finishPoint, DateTime pickupDay, string contactPhone)
+        public static DataWorkerResponse AddOrder(string clientName, string pickPoint, string finishPoint, string contactPhone)
         {
             DataWorkerResponse result = new DataWorkerResponse();
 
@@ -56,7 +56,6 @@ namespace OrderManager.Models
                     ClientName = clientName, 
                     PickupPoint = pickPoint, 
                     FinishPoint = finishPoint, 
-                    PickupDay = pickupDay,
                     ContactPhone = contactPhone
                 };
 
@@ -92,7 +91,7 @@ namespace OrderManager.Models
         /// <param name="newPickupDay">Новый день пикапа</param>
         /// <param name="newContactPhone">Новый телефон для связи</param>
         /// <returns></returns>
-        public static DataWorkerResponse EditOrder(int orderId, string newClientName, string newPickupPoint, string newFinishPoint, DateTime newPickupDay, string newContactPhone) 
+        public static DataWorkerResponse EditOrder(int orderId, string newClientName, string newPickupPoint, string newFinishPoint, string newContactPhone) 
         {
             DataWorkerResponse result = new DataWorkerResponse();
 
@@ -121,7 +120,6 @@ namespace OrderManager.Models
                 order.ClientName = newClientName;
                 order.PickupPoint = newPickupPoint;
                 order.FinishPoint = newFinishPoint;
-                order.PickupDay = newPickupDay;
                 order.ContactPhone = newContactPhone;
                 db.SaveChanges();
             }

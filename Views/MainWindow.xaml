@@ -9,14 +9,16 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
+
         <TabControl Grid.Row="0">
             <TabItem Name="OrdersTab">
                 <TabItem.Header>
                     <TextBlock Text="Заявки"/>
                 </TabItem.Header>
-                <ListView>
+                <ListView ItemsSource="{Binding Orders}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Номер заявки"/>
@@ -31,17 +33,21 @@
                 <TabItem.Header>
                     <TextBlock Text="Удалённые заявки"/>
                 </TabItem.Header>
-                <ListView>
+                <ListView ItemsSource="{Binding DeletedOrders}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="Номер заявки"/>
                             <GridViewColumn Header="Дата"/>
                             <GridViewColumn Header="Клиент"/>
-                            <GridViewColumn Header="Причина удаления"/>
+                            <GridViewColumn Header="Дата удаления"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
             </TabItem>
         </TabControl>
+        <StackPanel Grid.Row="2" Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button Content="Новая заявка" Command="{Binding OpenAddNewOrderWnd}"/>
+        </StackPanel>
     </Grid>
 </Window>

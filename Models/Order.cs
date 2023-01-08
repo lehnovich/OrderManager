@@ -29,11 +29,6 @@ namespace OrderManager.Models
         public string FinishPoint { get; set; }
 
         /// <summary>
-        /// День отгрузки
-        /// </summary>
-        public DateTime PickupDay { get; set; }
-
-        /// <summary>
         /// Телефон для связи
         /// </summary>
         public string ContactPhone { get; set; }

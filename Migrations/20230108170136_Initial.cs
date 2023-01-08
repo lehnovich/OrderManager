@@ -20,7 +20,6 @@ namespace OrderManager.Migrations
                     ClientName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PickupPoint = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     FinishPoint = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PickupDay = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ContactPhone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DeletedDateTime = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },

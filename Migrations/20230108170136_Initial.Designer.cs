@@ -12,7 +12,7 @@ using OrderManager.Models.Data;
 namespace OrderManager.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230108160936_Initial")]
+    [Migration("20230108170136_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -47,9 +47,6 @@ namespace OrderManager.Migrations
                     b.Property<string>("FinishPoint")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("PickupDay")
-                        .HasColumnType("datetime2");
 
                     b.Property<string>("PickupPoint")
                         .IsRequired()
