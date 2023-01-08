@@ -16,7 +16,7 @@ namespace OrderManager.Models
         /// <summary>
         /// Клиент
         /// </summary>
-        public Client Client { get; set; }
+        public string ClientName { get; set; }
 
         /// <summary>
         /// Точка вывоза
@@ -34,13 +34,18 @@ namespace OrderManager.Models
         public DateTime PickupDay { get; set; }
 
         /// <summary>
+        /// Телефон для связи
+        /// </summary>
+        public string ContactPhone { get; set; }
+
+        /// <summary>
         /// История статусов
         /// </summary>
         public List<StatusHistory> StatusHitory { get; set; }
 
         /// <summary>
-        /// Удалена ли запись из основного списка
+        /// Удалена ли заявка из основного списка
         /// </summary>
-        public DateTime? DeleteDateTime { get; set; }
+        public DateTime? DeletedDateTime { get; set; }
     }
 }

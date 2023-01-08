@@ -19,9 +19,10 @@
     <Compile Update="Views\EditOrderWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="Views\EditClientWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

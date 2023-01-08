@@ -19,8 +19,23 @@ namespace OrderManager.Models
         public OrderStatusEnum Status { get; set; }
 
         /// <summary>
+        /// Уникальный идентификатор заявки 
+        /// </summary>
+        public int OrderId { get; set; }
+
+        /// <summary>
         /// Дата и время проставления статуса
         /// </summary>
         public DateTime DataTime { get; set; }
+
+        /// <summary>
+        /// Причина отмены (Для статуса Отменена)
+        /// </summary>
+        public string? CancelReason { get; set; }
+
+        /// <summary>
+        /// Дата и время удаления статуса
+        /// </summary>
+        public DateTime? DeletedDateTime { get; set; }
     }
 }

@@ -27,21 +27,6 @@
                     </ListView.View>
                 </ListView>
             </TabItem>
-            <TabItem Name="ClientsTab">
-                <TabItem.Header>
-                    <TextBlock Text="Клиенты"/>
-                </TabItem.Header>
-                <ListView>
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Наименование организации"/>
-                            <GridViewColumn Header="ИНН"/>
-                            <GridViewColumn Header="КПП"/>
-                            <GridViewColumn Header="Состояние"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </TabItem>
             <TabItem Name="DeletedOrdersTab">
                 <TabItem.Header>
                     <TextBlock Text="Удалённые заявки"/>
