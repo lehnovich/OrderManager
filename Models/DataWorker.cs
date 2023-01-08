@@ -1,4 +1,5 @@
-﻿using OrderManager.Models.Data;
+﻿using Microsoft.IdentityModel.Tokens;
+using OrderManager.Models.Data;
 using OrderManager.Models.Enums;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,31 @@ namespace OrderManager.Models
 {
     public static class DataWorker
     {
+        /// <summary>
+        /// Получить список неудалённых заявок
+        /// </summary>
+        public static List<Order> GetNotDeletedOrders()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<Order> result = db.Orders.Where(o => o.DeletedDateTime == null).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Получить список удалённых заявок
+        /// </summary>
+        /// <returns></returns>
+        public static List<Order> GetDeletedOrders()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<Order> result = db.Orders.Where(o => o.DeletedDateTime != null).ToList();
+                return result;
+            }
+        }
+
         /// <summary>
         /// Добавление новой заявки
         /// </summary>
@@ -41,7 +67,7 @@ namespace OrderManager.Models
 
                 db.Orders.Add(newOrder);
 
-                DataWorkerResponse statusResponse = AddStatus(OrderStatusEnum.New, newOrder.Id);
+                DataWorkerResponse statusResponse = AddStatus(OrderStatusEnum.New, newOrder.Id, null);
 
                 if (statusResponse.IsSuccess == false)
                 {
@@ -97,7 +123,6 @@ namespace OrderManager.Models
                 order.FinishPoint = newFinishPoint;
                 order.PickupDay = newPickupDay;
                 order.ContactPhone = newContactPhone;
-
                 db.SaveChanges();
             }
 
@@ -127,7 +152,6 @@ namespace OrderManager.Models
                 }
 
                 order.DeletedDateTime = DateTime.Now;
-
                 db.SaveChanges();
             }
 
@@ -135,11 +159,24 @@ namespace OrderManager.Models
         }
 
         /// <summary>
+        /// Получить список неудалённых статусов по индентификатору заявки
+        /// </summary>
+        /// <returns></returns>
+        public static List<StatusHistory> GetStatusesByOrderId(int orderId)
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<StatusHistory> result = db.StatusHistories.Where(s => s.DeletedDateTime != null && s.OrderId == orderId).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
         /// Добавление нового статуса к заявке
         /// </summary>
         /// <param name="status">Новый статус</param>
         /// <param name="orderId">Идентификатор заявки</param>
-        /// <param name="reason">Причина для статуса Отменена</param>
+        /// <param name="reason">Причина отмены (для статуса Отменена)</param>
         public static DataWorkerResponse AddStatus(OrderStatusEnum status, int orderId, string? reason)
         {
             DataWorkerResponse result = new DataWorkerResponse();
@@ -155,13 +192,49 @@ namespace OrderManager.Models
                     result = valiateResult;
                     return result;
                 }
+                
+                if (status == OrderStatusEnum.Canceled && reason.IsNullOrEmpty())
+                {
+                    result.IsSuccess = false;
+                    result.Message = $"Для установки статуса Отменена, требуется обязательно указать причину отмены";
+                    return result;
+                }
 
-                StatusHistory newStatus = new StatusHistory { Status = status, OrderId = orderId, DataTime = DateTime.Now };
+                StatusHistory newStatus = new StatusHistory { Status = status, OrderId = orderId, DataTime = DateTime.Now, CancelReason = reason };
                 db.StatusHistories.Add(newStatus);
                 db.SaveChanges();
 
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Удаление статуса.
+        /// Удаление происходит фиктивно, путём изменения поля DeletedDateTime.  
+        /// </summary>
+        /// <param name="statusId">Идентификатор статуса</param>
+        /// <returns></returns>
+        public static DataWorkerResponse DeleteStatus(int statusId)
+        {
+            DataWorkerResponse result = new DataWorkerResponse();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                //Ищем запись для удаления
+                StatusHistory? status = db.StatusHistories.Where(s => s.Id == statusId && s.DeletedDateTime == null).FirstOrDefault();
+
+                if (status == null)
+                {
+                    result.IsSuccess = false;
+                    result.Message = $"Ошибка при удалении статуса с идентификатором = {statusId}.";
+                    return result;
+                }
+
+                status.DeletedDateTime = DateTime.Now;
+                db.SaveChanges();
+            }
+
+            return result;
         }
 
         /// <summary>
