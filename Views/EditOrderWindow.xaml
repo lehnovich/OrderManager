@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrderManager.Views"
         mc:Ignorable="d"
-        Title="EditOrderWindow" Height="250" Width="300"
+        Title="Изменения заявки" Height="250" Width="300"
         Name="EditOrderWnd" Icon="/Views/1802979.png">
     <Grid>
         <Grid.RowDefinitions>
