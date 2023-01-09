@@ -38,12 +38,12 @@ namespace OrderManager.Models
         /// Дата и время удаления статуса
         /// </summary>
         public DateTime? DeletedDateTime { get; set; }
-        
+
         /// <summary>
-        /// Описание актуального статуса
+        /// Описание статуса на русском (не мапится бд)
         /// </summary>
         [NotMapped]
-        public string ActualStatus
+        public string RussianName
         {
             get
             {

@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -47,8 +45,6 @@ namespace OrderManager.ViewModels
         public static string ContactPhone { get; set; }
         public static string SearchText { get; set; }
         public static string ReasonText { get; set; }
-
-        //свойства для выделенных элементов
         public static TabItem SelectedTabItem { get; set; }
         public static Order SelectedOrder { get; set; }
         public static List<StatusHistory> StatusesBySelectedOrder { get; set; }
@@ -141,6 +137,7 @@ namespace OrderManager.ViewModels
                 });
             }
         }
+
         private RelayCommand deleteStatus;
         public RelayCommand DeleteStatus
         {
@@ -200,7 +197,7 @@ namespace OrderManager.ViewModels
             {
                 return setInProgressStatus ?? new RelayCommand(obj =>
                 {
-                    DataWorkerResponse result = DataWorker.AddStatus(OrderStatusEnum.InProgress, StatusesBySelectedOrder.First().OrderId,string.Empty);
+                    DataWorkerResponse result = DataWorker.AddStatus(OrderStatusEnum.InProgress, StatusesBySelectedOrder.First().OrderId, string.Empty);
                     if (result.IsSuccess == true)
                     {
                         ShowMessageToUser("Статус успешно добавлен!");
@@ -215,6 +212,7 @@ namespace OrderManager.ViewModels
                 });
             }
         }
+
         private RelayCommand setCompletedStatus;
         public RelayCommand SetCompletedStatus
         {
@@ -293,7 +291,6 @@ namespace OrderManager.ViewModels
                 });
             }
         }
-
         #endregion
 
         #region COMMANDS TO OPEN WINDOW
@@ -318,7 +315,7 @@ namespace OrderManager.ViewModels
                 {
                     if (SelectedTabItem.Name == "OrdersTab" && SelectedOrder != null)
                     {
-                        if (DataWorker.GetActualStatusByOrderId(SelectedOrder.Id).Status != Models.Enums.OrderStatusEnum.New)
+                        if (DataWorker.GetActualStatusByOrderId(SelectedOrder.Id).Status != OrderStatusEnum.New)
                         {
                             ShowMessageToUser("Запрещено редактировать заявки не в статусе 'Новая'");
                         }
@@ -349,26 +346,39 @@ namespace OrderManager.ViewModels
         #endregion
 
         #region METHOS TO OPEN WINDOW
-        //Открытие окна новой заяки
+        /// <summary>
+        /// Открытие окна новой заявки
+        /// </summary>
         private void OpenAddNewOrderWndMethod()
         {
             AddNewOrderWindow addNewOrderWindow = new AddNewOrderWindow();
             SetCenterPositionAndOpen(addNewOrderWindow);
         }
 
-        //Открытие окна редактирования заяки
+        /// <summary>
+        /// Открытие окна редактирования заяки
+        /// </summary>
+        /// <param name="order">Заявка, подлежащая редактированию</param>
         private void OpenEditOrderWndMethod(Order order)
         {
             EditOrderWindow editOrderWindow = new EditOrderWindow(order);
             SetCenterPositionAndOpen(editOrderWindow);
         }
 
-        //Открытие окна просмотра и редактирования статусов заявки
+        /// <summary>
+        /// Открытие окна просмотра и редактирования статусов заявки
+        /// </summary>
+        /// <param name="statuses">Статусы заявки</param>
         private void OpenEditStatusWndMethod(List<StatusHistory> statuses)
         {
             EditStatusWindow editStatusWindow = new EditStatusWindow(statuses);
             SetCenterPositionAndOpen(editStatusWindow);
         }
+
+        /// <summary>
+        /// Открытие информационного окошка с сообщением
+        /// </summary>
+        /// <param name="message"></param>
         private void ShowMessageToUser(string message)
         {
             MessageView messageView = new MessageView(message);
@@ -376,9 +386,9 @@ namespace OrderManager.ViewModels
         }
 
         /// <summary>
-        /// Размещение окна по центру Главного окна и открытие
+        /// Открытие окна по центру главного окна
         /// </summary>
-        /// <param name="window"></param>
+        /// <param name="window">Окно, подлежащее открытию</param>
         private void SetCenterPositionAndOpen(Window window)
         {
             window.Owner = Application.Current.MainWindow;
@@ -388,12 +398,22 @@ namespace OrderManager.ViewModels
         #endregion
 
         #region CHANGE TEXTBLOCK COLOR 
+        /// <summary>
+        /// Изменение цвета блока на красный
+        /// </summary>
+        /// <param name="wnd">Окно, на котором находится блок</param>
+        /// <param name="blockName">Имя блока</param>
         private void SetRedBlockControll(Window wnd, string blockName)
         {
             Control block = wnd.FindName(blockName) as Control;
             block.BorderBrush = Brushes.Red;
         }
 
+        /// <summary>
+        /// Изменение цвета блока на серый
+        /// </summary>
+        /// <param name="wnd">Окно, на котором находится блок</param>
+        /// <param name="blockName">Имя блока</param>
         private void SetGrayBlockControll(Window wnd, string blockName)
         {
             Control block = wnd.FindName(blockName) as Control;
@@ -402,6 +422,9 @@ namespace OrderManager.ViewModels
         #endregion
 
         #region UPDATE VIEWS
+        /// <summary>
+        /// Обновление вьюшек с заявками 
+        /// </summary>
         private void UpdateOrdersViews()
         {
             Orders = DataWorker.GetNotDeletedOrders(SearchText);
@@ -416,6 +439,9 @@ namespace OrderManager.ViewModels
             MainWindow.DeletedOrders.ItemsSource = DeletedOrders;
             MainWindow.DeletedOrders.Items.Refresh();
         }
+        /// <summary>
+        /// Обновление вьюшки со статусами 
+        /// </summary>
         private void UpdateStatusesViews()
         {
             StatusesBySelectedOrder = DataWorker.GetStatusesByOrderId(StatusesBySelectedOrder.First().OrderId);
@@ -424,6 +450,7 @@ namespace OrderManager.ViewModels
             EditStatusWindow.Statuses.ItemsSource = StatusesBySelectedOrder;
             EditStatusWindow.Statuses.Items.Refresh();
         }
+
         private void SetNullValuesToProperties()
         {
             ClientName = null;

@@ -15,8 +15,9 @@ namespace OrderManager.Models
     public static class DataWorker
     {
         /// <summary>
-        /// Получить список неудалённых заявок c фильтром
+        /// Получить список неудалённых заявок
         /// </summary>
+        /// <param name="searchText">Фильтр для поиска</param>
         public static List<Order> GetNotDeletedOrders(string searchText)
         {
             using (ApplicationContext db = new ApplicationContext())
@@ -34,6 +35,7 @@ namespace OrderManager.Models
                     || o.DateStatusNew.ToString().Contains(searchText)
                     ).ToList();
                 }
+
                 return result;
             }
         }
@@ -41,7 +43,7 @@ namespace OrderManager.Models
         /// <summary>
         /// Получить список удалённых заявок
         /// </summary>
-        /// <returns></returns>
+        /// <param name="searchText">Фильтр для поиска</param>
         public static List<Order> GetDeletedOrders(string searchText)
         {
             using (ApplicationContext db = new ApplicationContext())
@@ -59,6 +61,7 @@ namespace OrderManager.Models
                     || o.DateStatusNew.ToString().Contains(searchText)
                     ).ToList();
                 }
+
                 return result;
             }
         }
@@ -75,7 +78,6 @@ namespace OrderManager.Models
         public static DataWorkerResponse AddOrder(string clientName, string pickPoint, string finishPoint, string contactPhone)
         {
             int orderId;
-
             DataWorkerResponse result = new DataWorkerResponse();
 
             using (ApplicationContext db = new ApplicationContext())
@@ -98,7 +100,6 @@ namespace OrderManager.Models
                 db.SaveChanges();
 
                 orderId = newOrder.Id;
-
                 DataWorkerResponse statusResponse = AddStatus(OrderStatusEnum.New, newOrder.Id, null);
                 if (statusResponse.IsSuccess == false)
                 {
@@ -252,7 +253,6 @@ namespace OrderManager.Models
 
             using (ApplicationContext db = new ApplicationContext())
             {
-                //Ищем запись для удаления
                 StatusHistory? status = db.StatusHistories.Where(s => s.Id == statusId && s.DeletedDateTime == null).FirstOrDefault();
 
                 if (status == null)
@@ -277,6 +277,11 @@ namespace OrderManager.Models
             return result;
         }
 
+        /// <summary>
+        /// Получить актуальный статус по OrderId
+        /// </summary>
+        /// <param name="orderId">Номер заявки</param>
+        /// <returns></returns>
         public static StatusHistory GetActualStatusByOrderId(int orderId)
         {
             DataWorkerResponse result = new DataWorkerResponse();
@@ -287,6 +292,12 @@ namespace OrderManager.Models
                 return status;
             }
         }
+
+        /// <summary>
+        /// Получить статус New по OrderId
+        /// </summary>
+        /// <param name="orderId">Номер заявки</param>
+        /// <returns></returns>
         public static StatusHistory GetStatusNewByOrderId(int orderId)
         {
             DataWorkerResponse result = new DataWorkerResponse();

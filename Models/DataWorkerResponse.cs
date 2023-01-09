@@ -1,7 +1,7 @@
 ﻿namespace OrderManager.Models
 {
     /// <summary>
-    /// Модель ответа на выполнение операции с данными
+    /// Модель ответа на работу DataWorker
     /// </summary>
     public class DataWorkerResponse
     {

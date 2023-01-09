@@ -40,7 +40,7 @@ namespace OrderManager.Models
         public List<StatusHistory> StatusHitory { get; set; }
 
         /// <summary>
-        /// Удалена ли заявка из основного списка
+        /// Удалена ли заявка из основного списка и когда
         /// </summary>
         public DateTime? DeletedDateTime { get; set; }
 
@@ -55,6 +55,7 @@ namespace OrderManager.Models
                 return DataWorker.GetStatusNewByOrderId(Id).DataTime;
             }
         }
+
         /// <summary>
         /// Описание актуального статуса
         /// </summary>

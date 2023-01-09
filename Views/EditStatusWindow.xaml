@@ -32,7 +32,7 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Статус"
-                                            DisplayMemberBinding="{Binding ActualStatus}"
+                                            DisplayMemberBinding="{Binding RussianName}"
                                             Width="60"/>
                     <GridViewColumn Header="Дата"
                                             DisplayMemberBinding="{Binding DataTime, StringFormat='{}{0:dd/MM/yyyy}'}"
