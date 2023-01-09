@@ -1,0 +1,69 @@
+﻿<Window x:Class="OrderManager.Views.EditStatusWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OrderManager.Views"
+        mc:Ignorable="d"
+        Title="Редактирование статусов" Height="250" Width="500"
+        Name="EditStatusWnd" ResizeMode="NoResize" Icon="/Views/1802979.png">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="200"/>
+        </Grid.ColumnDefinitions>
+        <ListView x:Name="ViewStatuses" 
+                  Grid.Row="0" 
+                  Grid.Column="0"
+                  Grid.RowSpan="4"
+                  ItemsSource="{Binding StatusesBySelectedOrder}"
+                  SelectedItem="{Binding SelectedStatus}" SelectedIndex="0" Margin="2,2,2,2">
+            <ListView.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Удалить" Command="{Binding DeleteStatus}"/>
+                </ContextMenu>
+            </ListView.ContextMenu>
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Статус"
+                                            DisplayMemberBinding="{Binding ActualStatus}"
+                                            Width="60"/>
+                    <GridViewColumn Header="Дата"
+                                            DisplayMemberBinding="{Binding DataTime, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                            Width="75"/>
+                    <GridViewColumn Header="Комментарий"
+                                            DisplayMemberBinding="{Binding CancelReason}"
+                                            Width="135"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Grid.Row="0" 
+                Grid.Column="1"
+                Command="{Binding SetInProgressStatus}"
+                CommandParameter="{Binding ElementName=EditStatusWnd}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="190">
+            <TextBlock TextAlignment="Center">Установить статус<LineBreak/>'Передана на выполнение'</TextBlock>
+        </Button>
+        <Button Grid.Row="1" 
+                Grid.Column="1"
+                Command="{Binding SetCompletedStatus}"
+                CommandParameter="{Binding ElementName=EditStatusWnd}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="190">
+            <TextBlock TextAlignment="Center">Установить статус<LineBreak/>'Выполнена'</TextBlock>
+        </Button>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBlock Text="Причина отмены:" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBox Text="{Binding ReasonText}" Width="190"/>
+        <Button 
+                Command="{Binding SetCanceledStatus}"
+                CommandParameter="{Binding ElementName=EditStatusWnd}" HorizontalAlignment="Center" VerticalAlignment="Center" Width="190" Margin="0,5,0,0">
+            <TextBlock TextAlignment="Center">Установить статус<LineBreak/>'Отменена'</TextBlock>
+        </Button>
+        </StackPanel>
+    </Grid>
+</Window>

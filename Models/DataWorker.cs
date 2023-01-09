@@ -3,23 +3,37 @@ using OrderManager.Models.Data;
 using OrderManager.Models.Enums;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 
 namespace OrderManager.Models
 {
     public static class DataWorker
     {
         /// <summary>
-        /// Получить список неудалённых заявок
+        /// Получить список неудалённых заявок c фильтром
         /// </summary>
-        public static List<Order> GetNotDeletedOrders()
+        public static List<Order> GetNotDeletedOrders(string searchText)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                List<Order> result = db.Orders.Where(o => o.DeletedDateTime == null).ToList();
+                List<Order> result  = db.Orders.Where(o => o.DeletedDateTime == null).ToList();
+
+                if (searchText.IsNullOrEmpty() == false)
+                {
+                    result = result.Where(o => o.Id.ToString().Contains(searchText) 
+                    || o.ClientName.Contains(searchText)
+                    || o.PickupPoint.Contains(searchText)
+                    || o.FinishPoint.Contains(searchText)
+                    || o.ContactPhone.Contains(searchText)
+                    || o.ActualStatus.Contains(searchText)
+                    || o.DateStatusNew.ToString().Contains(searchText)
+                    ).ToList();
+                }
                 return result;
             }
         }
@@ -28,11 +42,23 @@ namespace OrderManager.Models
         /// Получить список удалённых заявок
         /// </summary>
         /// <returns></returns>
-        public static List<Order> GetDeletedOrders()
+        public static List<Order> GetDeletedOrders(string searchText)
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 List<Order> result = db.Orders.Where(o => o.DeletedDateTime != null).ToList();
+                
+                if (searchText.IsNullOrEmpty() == false)
+                {
+                    result = result.Where(o => o.Id.ToString().Contains(searchText)
+                    || o.ClientName.Contains(searchText)
+                    || o.PickupPoint.Contains(searchText)
+                    || o.FinishPoint.Contains(searchText)
+                    || o.ContactPhone.Contains(searchText)
+                    || o.ActualStatus.Contains(searchText)
+                    || o.DateStatusNew.ToString().Contains(searchText)
+                    ).ToList();
+                }
                 return result;
             }
         }
@@ -48,38 +74,43 @@ namespace OrderManager.Models
         /// <returns></returns>
         public static DataWorkerResponse AddOrder(string clientName, string pickPoint, string finishPoint, string contactPhone)
         {
+            int orderId;
+
             DataWorkerResponse result = new DataWorkerResponse();
 
             using (ApplicationContext db = new ApplicationContext())
             {
-                Order newOrder = new Order {
-                    ClientName = clientName, 
-                    PickupPoint = pickPoint, 
-                    FinishPoint = finishPoint, 
+                Order newOrder = new Order
+                {
+                    ClientName = clientName,
+                    PickupPoint = pickPoint,
+                    FinishPoint = finishPoint,
                     ContactPhone = contactPhone
                 };
 
-                StatusHistory newStatus = new StatusHistory { 
-                    Status = OrderStatusEnum.New, 
-                    DataTime = DateTime.Now 
+                StatusHistory newStatus = new StatusHistory
+                {
+                    Status = OrderStatusEnum.New,
+                    DataTime = DateTime.Now
                 };
 
                 db.Orders.Add(newOrder);
+                db.SaveChanges();
+
+                orderId = newOrder.Id;
 
                 DataWorkerResponse statusResponse = AddStatus(OrderStatusEnum.New, newOrder.Id, null);
-
                 if (statusResponse.IsSuccess == false)
                 {
                     result = statusResponse;
                     return result;
                 }
-
-                db.SaveChanges();
-
-                return result;
             }
+
+            result.Message = $"Заявка успешно добавлена! Номер заявки {orderId}";
+            return result;
         }
-    
+
         /// <summary>
         /// Редактирование заявки
         /// Редактирование допускается только заявок в статусе New
@@ -91,7 +122,7 @@ namespace OrderManager.Models
         /// <param name="newPickupDay">Новый день пикапа</param>
         /// <param name="newContactPhone">Новый телефон для связи</param>
         /// <returns></returns>
-        public static DataWorkerResponse EditOrder(int orderId, string newClientName, string newPickupPoint, string newFinishPoint, string newContactPhone) 
+        public static DataWorkerResponse EditOrder(int orderId, string newClientName, string newPickupPoint, string newFinishPoint, string newContactPhone)
         {
             DataWorkerResponse result = new DataWorkerResponse();
 
@@ -110,7 +141,7 @@ namespace OrderManager.Models
                 //Редактирование заявки допускается только, если заявка находится в статусе «Новая» 
                 bool isNotNewExist = db.StatusHistories.Where(s => s.OrderId == orderId && s.DeletedDateTime == null && s.Status != OrderStatusEnum.New).Any();
 
-                if (isNotNewExist == true) 
+                if (isNotNewExist == true)
                 {
                     result.IsSuccess = false;
                     result.Message = $"Редактирование заказов не в статусе New запрещено";
@@ -124,6 +155,7 @@ namespace OrderManager.Models
                 db.SaveChanges();
             }
 
+            result.Message = $"Изменения в заявке {orderId} успешно сохранены!";
             return result;
         }
 
@@ -153,6 +185,7 @@ namespace OrderManager.Models
                 db.SaveChanges();
             }
 
+            result.Message = $"Заявка {orderId} успешно удалена!";
             return result;
         }
 
@@ -164,7 +197,7 @@ namespace OrderManager.Models
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                List<StatusHistory> result = db.StatusHistories.Where(s => s.DeletedDateTime != null && s.OrderId == orderId).ToList();
+                List<StatusHistory> result = db.StatusHistories.Where(s => s.DeletedDateTime == null && s.OrderId == orderId).ToList();
                 return result;
             }
         }
@@ -190,7 +223,7 @@ namespace OrderManager.Models
                     result = valiateResult;
                     return result;
                 }
-                
+
                 if (status == OrderStatusEnum.Canceled && reason.IsNullOrEmpty())
                 {
                     result.IsSuccess = false;
@@ -202,6 +235,7 @@ namespace OrderManager.Models
                 db.StatusHistories.Add(newStatus);
                 db.SaveChanges();
 
+                result.Message = $"Статус '{EnumHelper.GetDisplayName(status)}' успешно добавлен к заявке {orderId}!";
                 return result;
             }
         }
@@ -228,11 +262,40 @@ namespace OrderManager.Models
                     return result;
                 }
 
+                if (status.Status == OrderStatusEnum.New)
+                {
+                    result.IsSuccess = false;
+                    result.Message = $"Невозможно удалить статус 'Новая'";
+                    return result;
+                }
+
                 status.DeletedDateTime = DateTime.Now;
                 db.SaveChanges();
             }
 
+            result.Message = $"Статус успешно удалён!";
             return result;
+        }
+
+        public static StatusHistory GetActualStatusByOrderId(int orderId)
+        {
+            DataWorkerResponse result = new DataWorkerResponse();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                StatusHistory status = db.StatusHistories.Where(s => s.OrderId == orderId && s.DeletedDateTime == null).OrderByDescending(s => s.DataTime).First();
+                return status;
+            }
+        }
+        public static StatusHistory GetStatusNewByOrderId(int orderId)
+        {
+            DataWorkerResponse result = new DataWorkerResponse();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                StatusHistory status = db.StatusHistories.Where(s => s.OrderId == orderId && s.DeletedDateTime == null && s.Status == OrderStatusEnum.New).OrderByDescending(s => s.DataTime).Last();
+                return status;
+            }
         }
 
         /// <summary>
@@ -250,7 +313,7 @@ namespace OrderManager.Models
             if (checkIsCancelStatusExist == true)
             {
                 result.IsSuccess = false;
-                result.Message = "Невозможно изменить статус у удалённой заявки.";
+                result.Message = "Невозможно изменить статус у отменённой заявки.";
                 return result;
             }
 

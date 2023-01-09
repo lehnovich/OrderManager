@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace ManageStaffDBApp.Model
+namespace OrderManager.Model
 {
     public class RelayCommand : ICommand
     {

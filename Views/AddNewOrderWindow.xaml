@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrderManager.Views"
         mc:Ignorable="d"
-        Title="AddNewOrderWindow" Height="300" Width="300">
+        Title="AddNewOrderWindow" Height="250" Width="300"
+        Name ="AddNewOrderWind" Icon="/Views/1802979.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -16,14 +17,16 @@
                     VerticalAlignment="Center"
                     Width="200">
             <TextBlock Text="Имя клиента"/>
-            <TextBox Text=""/>
+            <TextBox Name="NameBlock" Text="{Binding ClientName}"/>
             <TextBlock Text="Адрес вывоза"/>
-            <TextBox Text=""/>
+            <TextBox Name="PickupPointBlock" Text="{Binding PickupPoint}"/>
             <TextBlock Text="Адрес доставки"/>
-            <TextBox Text=""/>
+            <TextBox Name="FinishPointBlock" Text="{Binding FinishPoint}"/>
             <TextBlock Text="Телефон для связи"/>
-            <TextBox Text=""/>
+            <TextBox Name="ContactPhoneBlock" PreviewTextInput="PreviewTextInput" Text="{Binding ContactPhone}"/>
         </StackPanel>
-        <Button Grid.Row="1" Content="Оформить заявку"/>
+        <Button Grid.Row="1" Content="Оформить заявку" 
+                Command="{Binding AddNewOrder}"
+                CommandParameter="{Binding ElementName=AddNewOrderWind}"/>
     </Grid>
 </Window>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using OrderManager.Models.Enums;
 
 namespace OrderManager.Models
@@ -37,5 +38,17 @@ namespace OrderManager.Models
         /// Дата и время удаления статуса
         /// </summary>
         public DateTime? DeletedDateTime { get; set; }
+        
+        /// <summary>
+        /// Описание актуального статуса
+        /// </summary>
+        [NotMapped]
+        public string ActualStatus
+        {
+            get
+            {
+                return EnumHelper.GetDisplayName(Status);
+            }
+        }
     }
 }

@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\1802979.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.1">
       <PrivateAssets>all</PrivateAssets>
@@ -16,6 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\EditStatusWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="Views\EditOrderWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -23,6 +30,10 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\1802979.png" />
   </ItemGroup>
 
 </Project>

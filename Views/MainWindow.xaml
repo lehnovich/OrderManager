@@ -5,26 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrderManager"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Менеджер заявок" Height="450" Width="900" WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Icon="/Views/1802979.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="5"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-
-        <TabControl Grid.Row="0">
+        <TabControl Grid.Row="0" SelectedItem="{Binding SelectedTabItem}" SelectedIndex="1">
             <TabItem Name="OrdersTab">
                 <TabItem.Header>
                     <TextBlock Text="Заявки"/>
                 </TabItem.Header>
-                <ListView ItemsSource="{Binding Orders}">
+                <TabItem.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Управление статусами" Command="{Binding OpenEditStatusWnd}"/>
+                        <MenuItem Header="Редактировать" Command="{Binding OpenEditOrderWnd}"/>
+                        <MenuItem Header="Удалить" Command="{Binding DeleteOrder}"/>
+                    </ContextMenu>
+                </TabItem.ContextMenu>
+                <ListView x:Name="ViewOrders" 
+                          ItemsSource="{Binding Orders}"
+                          SelectedItem="{Binding SelectedOrder}" SelectedIndex="0">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Номер заявки"/>
-                            <GridViewColumn Header="Дата"/>
-                            <GridViewColumn Header="Клиент"/>
-                            <GridViewColumn Header="Актуальный статус"/>
+                            <GridViewColumn Header="№"
+                                            DisplayMemberBinding="{Binding Id}"
+                                            Width="40"/>
+                            <GridViewColumn Header="Дата"
+                                            DisplayMemberBinding="{Binding DateStatusNew, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                            Width="75"/>
+                            <GridViewColumn Header="Клиент"
+                                            DisplayMemberBinding="{Binding ClientName}"
+                                            Width="125"/>
+                            <GridViewColumn Header="Статус"
+                                            DisplayMemberBinding="{Binding ActualStatus}"
+                                            Width="80"/>
+                            <GridViewColumn Header="Точка вывоза"
+                                            DisplayMemberBinding="{Binding PickupPoint}"
+                                            Width="220"/>
+                            <GridViewColumn Header="Точка доставки"
+                                            DisplayMemberBinding="{Binding FinishPoint}"
+                                            Width="220"/>
+                            <GridViewColumn Header="Телефон"
+                                            DisplayMemberBinding="{Binding ContactPhone}"
+                                            Width="90"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
@@ -33,21 +58,46 @@
                 <TabItem.Header>
                     <TextBlock Text="Удалённые заявки"/>
                 </TabItem.Header>
-                <ListView ItemsSource="{Binding DeletedOrders}">
+                <ListView x:Name="ViewDeletedOrders" ItemsSource="{Binding DeletedOrders}">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="Номер заявки"/>
-                            <GridViewColumn Header="Дата"/>
-                            <GridViewColumn Header="Клиент"/>
-                            <GridViewColumn Header="Дата удаления"/>
+                            <GridViewColumn Header="№"
+                                            DisplayMemberBinding="{Binding Id}"
+                                            Width="40"/>
+                            <GridViewColumn Header="Дата"
+                                            DisplayMemberBinding="{Binding DateStatusNew, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                            Width="75"/>
+                            <GridViewColumn Header="Клиент"
+                                            DisplayMemberBinding="{Binding ClientName}"
+                                            Width="125"/>
+                            <GridViewColumn Header="Точка вывоза"
+                                            DisplayMemberBinding="{Binding PickupPoint}"
+                                            Width="220"/>
+                            <GridViewColumn Header="Точка доставки"
+                                            DisplayMemberBinding="{Binding FinishPoint}"
+                                            Width="220"/>
+                            <GridViewColumn Header="Телефон"
+                                            DisplayMemberBinding="{Binding ContactPhone}"
+                                            Width="90"/>
+                            <GridViewColumn Header="Дата удаления"
+                                            DisplayMemberBinding="{Binding DeletedDateTime, StringFormat='{}{0:dd/MM/yyyy}'}"
+                                            Width="90"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
             </TabItem>
         </TabControl>
-        <StackPanel Grid.Row="2" Orientation="Horizontal"
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal"
                     HorizontalAlignment="Right">
-            <Button Content="Новая заявка" Command="{Binding OpenAddNewOrderWnd}"/>
+            <Button Content="Новая заявка" Command="{Binding OpenAddNewOrderWnd}" Margin="0,0,4,2"/>
+        </StackPanel>
+        <StackPanel Grid.Row="2" 
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left">
+            <TextBox Text="{Binding SearchText}" Margin="4,0,0,2" Width="148.7"/>
+            <Button Content="Поиск" Command="{Binding SearchByText}" Margin="2,0,0,2"/>
+            <Button Content="Сброс" Command="{Binding ClearSearchText}" Margin="2,0,0,2"/>
         </StackPanel>
     </Grid>
 </Window>

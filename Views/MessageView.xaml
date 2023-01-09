@@ -5,16 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OrderManager.Views"
         mc:Ignorable="d"
-        Title="MessageView" Height="100" Width="200">
+        Title="Сообщение!" Height="120" Width="300" Icon="/Views/1802979.png">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="25"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0"
+        <TextBlock x:Name="MessageText" Grid.Row="0"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    TextWrapping="Wrap"/>
-        <Button Grid.Row="1" Content="OK"/>
+        <Button Grid.Row="1" Content="OK" Click="Button_Click"/>
     </Grid>
 </Window>
